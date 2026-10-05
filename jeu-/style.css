@@ -22,3 +22,16 @@ body {
     left: 50%; /* Centrer le joueur horizontalement */
     transform: translateX(-50%); /* Centrer le joueur a lui meme horizontalement */
 }
+
+#enemies {
+    position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
+    width: 100%; /* Les ennemis occupent toute la largeur du plateau de jeu */
+    height: 100%; /* Les ennemis occupent toute la hauteur du plateau de jeu */
+}
+
+.enemy {
+    background-color: red;
+    position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
+    width: 5vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
+    height: 5vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
+}
