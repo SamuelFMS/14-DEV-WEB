@@ -11,8 +11,18 @@ body {
     width: 80vh; /* Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
     height: 80vh; /** Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
     background-color: black;
+    overflow: hidden;
 }
 
+/* Couches du jeu */
+
+#enemies,
+#playerProjectiles {
+    position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
+    inset: 0; /* Remplit tout le plateau de jeu */
+}
+
+/* Joueur */
 #player {
     position: absolute; /* Permet de positionner le joueur par rapport au plateau de jeu */
     background-color: white;
@@ -20,18 +30,26 @@ body {
     height: 5vh; /* Utiliser vh pour que le joueur soit proportionnel à la hauteur de la fenêtre */
     bottom: 1vh;
     left: 50%; /* Centrer le joueur horizontalement */
-    transform: translateX(-50%); /* Centrer le joueur a lui meme horizontalement */
+    transform: translateX(-50%);  /* Centrer le joueur a lui meme horizontalement */
 }
 
-#enemies {
-    position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
-    width: 100%; /* Les ennemis occupent toute la largeur du plateau de jeu */
-    height: 100%; /* Les ennemis occupent toute la hauteur du plateau de jeu */
-}
-
+/* Ennemis */
 .enemy {
     background-color: red;
     position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
     width: 5vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
     height: 5vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
+    transform: translateX(-50%);
+}
+
+/* Projectiles */
+.projectile {
+    position: absolute;
+
+    width: 1vh;
+    height: 3vh;
+
+    transform: translateX(-50%);
+
+    background-color: yellow;
 }
