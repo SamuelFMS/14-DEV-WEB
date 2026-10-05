@@ -85,9 +85,14 @@ function startWave() {
     for (let i = 0; i < enemyCount; i++) {
         const enemy = document.createElement("div");
         enemy.classList.add("enemy");
-        enemy.style.left = `${5 + Math.random() * 90}%`;
-        enemy.style.top = `${5 + Math.random() * 35}%`;
+        enemy.style.left = `${10 + (i / (enemyCount - 1)) * 80}%`;
+        enemy.style.top = `${5 + 0.5 * 35}%`;
         enemies.appendChild(enemy);
+        const enemyImage = document.createElement("img");
+        enemyImage.src = "images/Enemy.png";
+        enemyImage.alt = "Ennemi";
+        enemyImage.classList.add("enemyImage");
+        enemy.appendChild(enemyImage);
     }
 }
 
