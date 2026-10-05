@@ -10,7 +10,7 @@ let wave = 0;
 const keys = new Set();
 
 const PLAYER_SPEED = 40; // % par seconde
-const SHOT_COOLDOWN = 700;
+const SHOT_COOLDOWN = 400;
 
 const numberOfEnemiesPerRound = [5, 7, 10, 15, 20];
 

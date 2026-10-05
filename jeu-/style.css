@@ -25,12 +25,19 @@ body {
 /* Joueur */
 #player {
     position: absolute; /* Permet de positionner le joueur par rapport au plateau de jeu */
-    background-color: white;
     width: 5vh; /* Utiliser vh pour que le joueur soit proportionnel à la hauteur de la fenêtre */
     height: 5vh; /* Utiliser vh pour que le joueur soit proportionnel à la hauteur de la fenêtre */
     bottom: 1vh;
     left: 50%; /* Centrer le joueur horizontalement */
     transform: translateX(-50%);  /* Centrer le joueur a lui meme horizontalement */
+}
+
+#playerImage {
+    width: 150%;
+    height: 150%;
+    transform: translate(-15%, -25%);
+    object-fit: contain;
+    display: block;
 }
 
 /* Ennemis */
