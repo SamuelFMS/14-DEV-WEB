@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex; /* Utiliser Flexbox pour centrer le plateau de jeu */
+    justify-content: center; /* Centrer le plateau de jeu horizontalement */
+    align-items: center; /* Centrer le plateau de jeu verticalement */
+}
+
+#game {
+    position: relative; /* Permet de positionner le joueur par rapport au plateau de jeu */
+    width: 80vh; /* Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
+    height: 80vh; /** Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
+    background-color: black;
+}
+
+#player {
+    position: absolute; /* Permet de positionner le joueur par rapport au plateau de jeu */
+    background-color: white;
+    width: 5vh; /* Utiliser vh pour que le joueur soit proportionnel à la hauteur de la fenêtre */
+    height: 5vh; /* Utiliser vh pour que le joueur soit proportionnel à la hauteur de la fenêtre */
+    bottom: 1vh;
+    left: 50%; /* Centrer le joueur horizontalement */
+    transform: translateX(-50%); /* Centrer le joueur a lui meme horizontalement */
+}
