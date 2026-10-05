@@ -10,7 +10,7 @@ let wave = 0;
 const keys = new Set();
 
 const PLAYER_SPEED = 40; // % par seconde
-const SHOT_COOLDOWN = 100;
+const SHOT_COOLDOWN = 700;
 
 const numberOfEnemiesPerRound = [5, 7, 10, 15, 20];
 
@@ -23,6 +23,20 @@ function movePlayer(direction, deltaTime) {
     playerPosition = Math.max(2.5, Math.min(97.5, playerPosition));
 
     player.style.left = `${playerPosition}%`;
+}
+
+function updateProjectiles(deltaTime) {
+    const projectiles = Array.from(playerProjectiles.children);
+    for (const projectile of projectiles) {
+        const currentBottom = parseFloat(projectile.style.bottom);
+        const newBottom = currentBottom + 50 * (deltaTime / 100);
+        projectile.style.bottom = `${newBottom}px`;
+        if(projectile.getBoundingClientRect().top < 0) {
+            /* remove dom element */
+            console.log("Projectile removed");
+            projectile.remove();
+        }
+    }
 }
 
 function spawnProjectile() {
@@ -73,6 +87,7 @@ function update(currentTime) {
     if (keys.has("ArrowUp")) {
         shoot(currentTime);
     }
+    updateProjectiles(deltaTime);
     if (enemies.childElementCount === 0) {
         wave++;
         startWave();
