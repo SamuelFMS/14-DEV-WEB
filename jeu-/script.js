@@ -25,6 +25,23 @@ function movePlayer(direction, deltaTime) {
     player.style.left = `${playerPosition}%`;
 }
 
+function checkCollisions() {
+    for (const projectile of Array.from(playerProjectiles.children)) {
+        const projectileRect = projectile.getBoundingClientRect();
+        for (const enemy of Array.from(enemies.children)) {
+            const enemyRect = enemy.getBoundingClientRect();
+            if (projectileRect.left < enemyRect.right &&
+                projectileRect.right > enemyRect.left &&
+                projectileRect.top < enemyRect.bottom &&
+                projectileRect.bottom > enemyRect.top) {
+                console.log("Collision detected!");
+                projectile.remove();
+                enemy.remove();
+            }
+        }
+    }
+}
+
 function updateProjectiles(deltaTime) {
     const projectiles = Array.from(playerProjectiles.children);
     for (const projectile of projectiles) {
@@ -88,6 +105,7 @@ function update(currentTime) {
         shoot(currentTime);
     }
     updateProjectiles(deltaTime);
+    checkCollisions();  
     if (enemies.childElementCount === 0) {
         wave++;
         startWave();
