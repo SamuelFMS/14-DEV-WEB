@@ -8,7 +8,7 @@ body {
 
 #game {
     position: relative; /* Permet de positionner le joueur par rapport au plateau de jeu */
-    width: 80vh; /* Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
+    width: 120vh; /* Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
     height: 80vh; /** Utiliser vh pour que le plateau de jeu soit proportionnel à la hauteur de la fenêtre */
     background-color: black;
     overflow: hidden;
