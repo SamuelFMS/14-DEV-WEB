@@ -116,8 +116,9 @@ function startWave() {
     }
 }
 
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-function update(currentTime) {
+async function update(currentTime) {
     const deltaTime = currentTime - previousTime;
     previousTime = currentTime;
     if (keys.has("ArrowLeft")) {
@@ -132,6 +133,7 @@ function update(currentTime) {
     updateProjectiles(deltaTime);
     checkCollisions();  
     if (enemies.childElementCount === 0) {
+        await wait(1000); 
         wave++;
         startWave();
     }
