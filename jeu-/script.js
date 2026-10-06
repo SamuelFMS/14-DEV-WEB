@@ -8,6 +8,7 @@ let previousTime = performance.now();
 let lastShotTime = 0;
 let wave = 0;
 let waveWaiting = false;
+let lastUpdateEnemyTime = performance.now();
 
 const keys = new Set();
 
@@ -40,7 +41,7 @@ function spawnExplosion(left, top) {
 }
 
 /*
-    Player 
+    Player Movement
 */
 function movePlayer(direction, deltaTime) {
     playerPosition += direction * PLAYER_SPEED * (deltaTime / 1000);
@@ -48,6 +49,24 @@ function movePlayer(direction, deltaTime) {
     playerPosition = Math.max(2.5, Math.min(97.5, playerPosition));
 
     player.style.left = `${playerPosition}%`;
+}
+
+/*
+    Enemy Movement
+*/
+function moveEnemies(deltaTime) {
+    const time = performance.now() / 1000;
+
+    for (const enemy of Array.from(enemies.children)) {
+        const horizontalOffset = Math.sin(time * enemy.driftSpeed + enemy.driftOffset) * enemy.horizontalAmplitude;
+        const verticalOffset = Math.sin(time * (enemy.driftSpeed * 1.8) + enemy.driftOffset) * enemy.verticalAmplitude;
+
+        const nextLeft = Math.max(6, Math.min(94, enemy.baseX + horizontalOffset));
+        const nextTop = Math.max(8, Math.min(28, enemy.baseY + verticalOffset));
+
+        enemy.style.left = `${nextLeft}%`;
+        enemy.style.top = `${nextTop}%`;
+    }
 }
 
 /*
@@ -161,14 +180,27 @@ function startWave() {
     for (let i = 0; i < enemyCount; i++) {
         const enemy = document.createElement("div");
         enemy.classList.add("enemy");
-        enemy.style.left = `${10 + (i / (enemyCount - 1)) * 80}%`;
-        enemy.style.top = `${10}%`;
+
+        const baseX = 10 + (i / (enemyCount - 1)) * 80;
+        const baseY = 10 + (i % 3) * 1.5;
+
+        enemy.baseX = baseX;
+        enemy.baseY = baseY;
+        enemy.driftOffset = Math.random() * Math.PI * 2;
+        enemy.driftSpeed = 1.2 + Math.random() * 1.3;
+        enemy.horizontalAmplitude = 4 + Math.random() * 6;
+        enemy.verticalAmplitude = 0.8 + Math.random() * 1.2;
+
+        enemy.style.left = `${baseX}%`;
+        enemy.style.top = `${baseY}%`;
         enemies.appendChild(enemy);
+
         const enemyImage = document.createElement("img");
         enemyImage.src = "images/Enemy.png";
         enemyImage.alt = "Ennemi";
         enemyImage.classList.add("enemyImage");
         enemy.appendChild(enemyImage);
+
         setTimeout(() => {
             spawnEnemyProjectile(enemy);
         }, ENEMY_ShOOT_COOLDOWN);
@@ -190,6 +222,7 @@ async function update(currentTime) {
     if (keys.has("ArrowUp")) {
         shoot(currentTime);
     }
+    moveEnemies(deltaTime);
     updateProjectiles(deltaTime);
     updateEnemyProjectiles(deltaTime);
     checkCollisions();  
