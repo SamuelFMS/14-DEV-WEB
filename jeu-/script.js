@@ -59,17 +59,17 @@ function spawnAsteroidWave() {
     Explosion
  */
 function spawnExplosion(left, top) {
-    const asteroid = document.createElement("img");
-    asteroid.src = "images/Asteroid.png";
-    asteroid.alt = "Asteroid";
-    asteroid.style.position = "absolute";
-    asteroid.style.left = `${left}`;
-    asteroid.style.top = `${top}`;
-    asteroid.style.width = "15vh";
-    asteroid.style.height = "15vh";
-    document.getElementById("asteroids").appendChild(asteroid);
+    const explosion = document.createElement("img");
+    explosion.src = "images/explosion.gif";
+    explosion.alt = "Explosion";
+    explosion.style.position = "absolute";
+    explosion.style.left = `${left}`;
+    explosion.style.top = `${top}`;
+    explosion.style.width = "15vh";
+    explosion.style.height = "15vh";
+    document.getElementById("explosions").appendChild(explosion);
     setTimeout(() => {
-        asteroid.remove(); // Supprime le GIF après sa lecture
+        explosion.remove(); // Supprime le GIF après sa lecture
     }, 550);
 }
 
