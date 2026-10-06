@@ -20,22 +20,56 @@ const PROJECTILE_SPEED = 50; // % par seconde
 addEventListener("keydown", e => keys.add(e.key));
 addEventListener("keyup", e => keys.delete(e.key));
 
+/*
+    Asteroids
+*/
+function spawnAsteroid() {
+    const pos_x = Math.random() * 90 + 5; // Positions aléatoires entre 5% et 95%
+    const asteroid = document.createElement("img");
+    asteroid.classList.add("asteroid");
+    asteroid.src = "images/Asteroid.png";
+    asteroid.alt = "Asteroid";
+    asteroid.style.left = `${pos_x}%`;
+    asteroid.style.top = "0%";
+    document.getElementById("asteroids").appendChild(asteroid);
+}
+
+function updateAsteroids(deltaTime) {
+    const asteroids = Array.from(document.getElementsByClassName("asteroid"));
+    for (const asteroid of asteroids) {
+        const currentTop = parseFloat(asteroid.style.top);
+        const newTop = currentTop + PROJECTILE_SPEED * (deltaTime / 1000);
+        asteroid.style.top = `${newTop}%`;
+        if (newTop > 150) {
+            asteroid.remove();
+        }
+    }
+}
+
+function spawnAsteroidWave() {
+    const asteroidCount = 150;
+    for (let i = 0; i < asteroidCount; i++) {
+        setTimeout(() => {
+            spawnAsteroid();
+        }, i * 300); // Espacement de 500ms entre chaque astéroïde
+    }
+}
 
 /*
     Explosion
  */
 function spawnExplosion(left, top) {
-    const explosion = document.createElement("img");
-    explosion.src = "images/explosion.gif";
-    explosion.alt = "Explosion";
-    explosion.style.position = "absolute";
-    explosion.style.left = `${left}`;
-    explosion.style.top = `${top}`;
-    explosion.style.width = "15vh";
-    explosion.style.height = "15vh";
-    document.getElementById("explosions").appendChild(explosion);
+    const asteroid = document.createElement("img");
+    asteroid.src = "images/Asteroid.png";
+    asteroid.alt = "Asteroid";
+    asteroid.style.position = "absolute";
+    asteroid.style.left = `${left}`;
+    asteroid.style.top = `${top}`;
+    asteroid.style.width = "15vh";
+    asteroid.style.height = "15vh";
+    document.getElementById("asteroids").appendChild(asteroid);
     setTimeout(() => {
-        explosion.remove(); // Supprime le GIF après sa lecture
+        asteroid.remove(); // Supprime le GIF après sa lecture
     }, 550);
 }
 
@@ -201,6 +235,7 @@ function shoot(currentTime) {
     Commencement des vagues d'ennemis
 */
 function startWave() {
+    wave = 1;
     if (wave >= 3) {
         console.log("Toutes les vagues terminées !");
         return;
@@ -237,6 +272,8 @@ function startWave() {
                     spawnEnemyProjectile(enemy);
                 }, ENEMY_ShOOT_COOLDOWN);
             }
+        case 1:
+            spawnAsteroidWave();
         case 2:
             break;
         default:
@@ -264,6 +301,7 @@ async function update(currentTime) {
     moveEnemies(deltaTime);
     updateProjectiles(deltaTime);
     updateEnemyProjectiles(deltaTime);
+    updateAsteroids(deltaTime);
     checkCollisionsEnemy();  
     requestAnimationFrame(update);
 }

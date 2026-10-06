@@ -17,7 +17,8 @@ body {
 /* Couches du jeu */
 
 #enemies,
-#playerProjectiles {
+#playerProjectiles, 
+#asteroids {
     position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
     inset: 0; /* Remplit tout le plateau de jeu */
 }
@@ -84,4 +85,12 @@ body {
     height: 15vh;
     transform: translate(-50%, -50%);
     object-fit: contain;
+}
+
+/* Asteroids */
+.asteroid {
+    position: absolute;
+    height: auto;
+    width: 10vh;
+    transform: translate(-50%,-100%);
 }
