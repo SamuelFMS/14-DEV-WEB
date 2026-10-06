@@ -25,13 +25,15 @@ addEventListener("keyup", e => keys.delete(e.key));
 */
 function spawnAsteroid() {
     const pos_x = Math.random() * 90 + 5; // Positions aléatoires entre 5% et 95%
-    const asteroid = document.createElement("img");
+    const asteroid = document.createElement("div");
     asteroid.classList.add("asteroid");
-    asteroid.src = "images/Asteroid.png";
-    asteroid.alt = "Asteroid";
     asteroid.style.left = `${pos_x}%`;
     asteroid.style.top = "0%";
     document.getElementById("asteroids").appendChild(asteroid);
+    const asteroid_image = document.createElement("img");
+    asteroid_image.src = "images/Asteroid.png";
+    asteroid.alt = "Asteroid";
+    asteroid.appendChild(asteroid_image);
 }
 
 function updateAsteroids(deltaTime) {
@@ -155,6 +157,16 @@ function checkCollisionsEnemy() {
             projectileRect.top < playerRect.bottom &&
             projectileRect.bottom > playerRect.top) {
             projectile.remove();
+            destroyPlayer();
+        }
+    }
+
+    for (const asteroid of Array.from(document.getElementsByClassName("asteroid"))) {
+        const asteroidRect = asteroid.getBoundingClientRect();
+        if (asteroidRect.left < playerRect.right &&
+            asteroidRect.right > playerRect.left &&
+            asteroidRect.top < playerRect.bottom &&
+            asteroidRect.bottom > playerRect.top) {
             destroyPlayer();
         }
     }
