@@ -101,3 +101,18 @@ body {
     height: auto;
     transform: translateY(-50%);
 }
+
+.boss {
+    position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
+    width: 20vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
+    height: 20vh; /* Utiliser vh pour que les ennemis soient proportionnels à la hauteur de la fenêtre */
+    transform: translate(-50%, +20%);
+}
+
+.bossImage {
+    width: 150%;
+    height: 150%;
+    transform: translate(-15%, -25%);
+    object-fit: contain;
+    display: block;
+}
