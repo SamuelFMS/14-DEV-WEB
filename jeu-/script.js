@@ -17,6 +17,18 @@ const numberOfEnemiesPerRound = [5, 7, 10, 15, 20];
 addEventListener("keydown", e => keys.add(e.key));
 addEventListener("keyup", e => keys.delete(e.key));
 
+function spawnExplosion(left, top) {
+    const explosion = document.createElement("img");
+    explosion.src = "images/explosion.gif";
+    explosion.alt = "Explosion";
+    explosion.style.position = "absolute";
+    explosion.style.left = `${left}`;
+    explosion.style.top = `${top}`;
+    explosion.style.width = "15vh";
+    explosion.style.height = "15vh";
+    document.getElementById("explosions").appendChild(explosion);
+}
+
 function movePlayer(direction, deltaTime) {
     playerPosition += direction * PLAYER_SPEED * (deltaTime / 1000);
 
@@ -35,8 +47,13 @@ function checkCollisions() {
                 projectileRect.top < enemyRect.bottom &&
                 projectileRect.bottom > enemyRect.top) {
                 console.log("Collision detected!");
+                const explosionsRect = document.getElementById("explosions").getBoundingClientRect();
+                const explosionLeft = `${enemyRect.left + enemyRect.width / 2 - explosionsRect.left}px`;
+                const explosionTop = `${enemyRect.top + enemyRect.height / 2 - explosionsRect.top}px`;
+                console.log(`Explosion at: left=${explosionLeft}, top=${explosionTop}`);
                 projectile.remove();
                 enemy.remove();
+                spawnExplosion(explosionLeft, explosionTop);
             }
         }
     }
@@ -46,7 +63,7 @@ function updateProjectiles(deltaTime) {
     const projectiles = Array.from(playerProjectiles.children);
     for (const projectile of projectiles) {
         const currentBottom = parseFloat(projectile.style.bottom);
-        const newBottom = currentBottom + 50 * (deltaTime / 100);
+        const newBottom = currentBottom + 50 * (deltaTime / 10);
         projectile.style.bottom = `${newBottom}px`;
         if(projectile.getBoundingClientRect().top < 0) {
             /* remove dom element */

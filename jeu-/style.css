@@ -67,3 +67,16 @@ body {
 
     background-color: rgb(92, 149, 255);
 }
+/* Explosions */
+#explosions {
+    position: absolute;
+    inset: 0;
+}
+
+#explosions img {
+    position: absolute;
+    width: 15vh;
+    height: 15vh;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+}
