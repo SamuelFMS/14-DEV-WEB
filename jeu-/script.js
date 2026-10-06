@@ -27,6 +27,9 @@ function spawnExplosion(left, top) {
     explosion.style.width = "15vh";
     explosion.style.height = "15vh";
     document.getElementById("explosions").appendChild(explosion);
+    setTimeout(() => {
+        explosion.remove(); // Supprime le GIF après sa lecture
+    }, 550);
 }
 
 function movePlayer(direction, deltaTime) {
