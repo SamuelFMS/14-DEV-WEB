@@ -9,6 +9,7 @@ let lastShotTime = 0;
 let wave = 0;
 let waveWaiting = false;
 let lastUpdateEnemyTime = performance.now();
+let playerAlive = true;
 
 const keys = new Set();
 
@@ -72,6 +73,19 @@ function moveEnemies(deltaTime) {
 /*
     Collisions
 */
+function destroyPlayer() {
+    if (!playerAlive) return;
+
+    playerAlive = false;
+    const playerRect = player.getBoundingClientRect();
+    const explosionsRect = document.getElementById("explosions").getBoundingClientRect();
+    const explosionLeft = `${playerRect.left + playerRect.width / 2 - explosionsRect.left}px`;
+    const explosionTop = `${playerRect.top + playerRect.height / 2 - explosionsRect.top}px`;
+
+    player.style.display = "none";
+    spawnExplosion(explosionLeft, explosionTop);
+}
+
 function checkCollisions() {
     for (const projectile of Array.from(playerProjectiles.children)) {
         const projectileRect = projectile.getBoundingClientRect();
@@ -90,6 +104,20 @@ function checkCollisions() {
                 enemy.remove();
                 spawnExplosion(explosionLeft, explosionTop);
             }
+        }
+    }
+
+    if (!playerAlive) return;
+
+    const playerRect = player.getBoundingClientRect();
+    for (const projectile of Array.from(enemyProjectiles.children)) {
+        const projectileRect = projectile.getBoundingClientRect();
+        if (projectileRect.left < playerRect.right &&
+            projectileRect.right > playerRect.left &&
+            projectileRect.top < playerRect.bottom &&
+            projectileRect.bottom > playerRect.top) {
+            projectile.remove();
+            destroyPlayer();
         }
     }
 }
