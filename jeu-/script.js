@@ -1,22 +1,29 @@
 const player = document.getElementById("player");
 const enemies = document.getElementById("enemies");
 const playerProjectiles = document.getElementById("playerProjectiles");
+const enemyProjectiles = document.getElementById("enemyProjectiles");
 
 let playerPosition = 50;
 let previousTime = performance.now();
 let lastShotTime = 0;
 let wave = 0;
+let waveWaiting = false;
 
 const keys = new Set();
 
 const PLAYER_SPEED = 40; // % par seconde
 const SHOT_COOLDOWN = 400;
-
+const ENEMY_ShOOT_COOLDOWN = 1000;
+const PROJECTILE_SPEED = 50; // % par seconde
 const numberOfEnemiesPerRound = [5, 7, 10, 15, 20];
 
 addEventListener("keydown", e => keys.add(e.key));
 addEventListener("keyup", e => keys.delete(e.key));
 
+
+/*
+    Explosion
+ */
 function spawnExplosion(left, top) {
     const explosion = document.createElement("img");
     explosion.src = "images/explosion.gif";
@@ -32,6 +39,9 @@ function spawnExplosion(left, top) {
     }, 550);
 }
 
+/*
+    Player 
+*/
 function movePlayer(direction, deltaTime) {
     playerPosition += direction * PLAYER_SPEED * (deltaTime / 1000);
 
@@ -40,6 +50,9 @@ function movePlayer(direction, deltaTime) {
     player.style.left = `${playerPosition}%`;
 }
 
+/*
+    Collisions
+*/
 function checkCollisions() {
     for (const projectile of Array.from(playerProjectiles.children)) {
         const projectileRect = projectile.getBoundingClientRect();
@@ -62,15 +75,17 @@ function checkCollisions() {
     }
 }
 
+/*
+    Projectiles
+*/
+// Joueur
 function updateProjectiles(deltaTime) {
     const projectiles = Array.from(playerProjectiles.children);
     for (const projectile of projectiles) {
         const currentBottom = parseFloat(projectile.style.bottom);
-        const newBottom = currentBottom + 50 * (deltaTime / 10);
-        projectile.style.bottom = `${newBottom}px`;
-        if(projectile.getBoundingClientRect().top < 0) {
-            /* remove dom element */
-            console.log("Projectile removed");
+        const newBottom = currentBottom + PROJECTILE_SPEED * (deltaTime / 1000);
+        projectile.style.bottom = `${newBottom}%`;
+        if (newBottom > 100) {
             projectile.remove();
         }
     }
@@ -88,6 +103,44 @@ function spawnProjectile() {
     playerProjectiles.appendChild(projectile);
 }
 
+//Enemie
+function spawnEnemyProjectile(enemy) {
+    if(!document.body.contains(enemy)) return;
+
+
+    const projectile = document.createElement("div");
+
+    projectile.classList.add("projectile");
+
+    // Le joueur et le projectile ont maintenant le même référentiel
+    console.log("Enemy shooting ", enemy.style.top);
+    projectile.style.left = `${enemy.style.left}`;
+    projectile.style.top = `${enemy.style.top}`;
+
+    enemyProjectiles.appendChild(projectile);
+
+    setTimeout(() => {
+        spawnEnemyProjectile(enemy);
+    }, ENEMY_ShOOT_COOLDOWN);
+}
+
+function updateEnemyProjectiles(deltaTime) {
+    const projectiles = Array.from(enemyProjectiles.children);
+    for (const projectile of projectiles) {
+        const currentTop = parseFloat(projectile.style.top);
+        const newTop = currentTop + PROJECTILE_SPEED * (deltaTime / 1000);
+        projectile.style.top = `${newTop}%`;
+        if(projectile.getBoundingClientRect().bottom > window.innerHeight) {
+            /* remove dom element */
+            console.log("Enemy Projectile removed");
+            projectile.remove();
+        }
+    }
+}
+
+/*
+    Tir du joueur
+*/
 function shoot(currentTime) {
     if (currentTime - lastShotTime < SHOT_COOLDOWN) return;
 
@@ -95,6 +148,9 @@ function shoot(currentTime) {
     lastShotTime = currentTime;
 }
 
+/*
+    Commencement des vagues d'ennemis
+*/
 function startWave() {
     if (wave >= numberOfEnemiesPerRound.length) {
         console.log("Toutes les vagues terminées !");
@@ -106,18 +162,22 @@ function startWave() {
         const enemy = document.createElement("div");
         enemy.classList.add("enemy");
         enemy.style.left = `${10 + (i / (enemyCount - 1)) * 80}%`;
-        enemy.style.top = `${5 + 0.5 * 35}%`;
+        enemy.style.top = `${10}%`;
         enemies.appendChild(enemy);
         const enemyImage = document.createElement("img");
         enemyImage.src = "images/Enemy.png";
         enemyImage.alt = "Ennemi";
         enemyImage.classList.add("enemyImage");
         enemy.appendChild(enemyImage);
+        setTimeout(() => {
+            spawnEnemyProjectile(enemy);
+        }, ENEMY_ShOOT_COOLDOWN);
     }
 }
 
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+/*
+    Update loop
+*/
 async function update(currentTime) {
     const deltaTime = currentTime - previousTime;
     previousTime = currentTime;
@@ -131,15 +191,22 @@ async function update(currentTime) {
         shoot(currentTime);
     }
     updateProjectiles(deltaTime);
+    updateEnemyProjectiles(deltaTime);
     checkCollisions();  
-    if (enemies.childElementCount === 0) {
-        await wait(1000); 
-        wave++;
-        startWave();
+    if (enemies.childElementCount === 0 && !waveWaiting) {
+        waveWaiting = true;
+        setTimeout(() => {
+            wave++;
+            startWave();
+            waveWaiting = false;
+        }, 1000);
     }
     requestAnimationFrame(update);
 }
 
+/*
+    Start the game
+*/
 function startGame() {
     startWave();
     requestAnimationFrame(update);

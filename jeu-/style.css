@@ -64,8 +64,13 @@ body {
     height: 3vh;
 
     transform: translateX(-50%);
+}
 
+#playerProjectiles .projectile {
     background-color: rgb(92, 149, 255);
+}
+#enemyProjectiles .projectile {
+    background-color: rgb(163, 3, 123);
 }
 /* Explosions */
 #explosions {
