@@ -5,6 +5,9 @@ const enemyProjectiles = document.getElementById("enemyProjectiles");
 const asteroids = document.getElementById("asteroids");
 const explosions = document.getElementById("explosions");
 const game = document.getElementById("game");
+const endMenu = document.getElementById("endMenu");
+const endTitle = document.getElementById("endTitle");
+const replayButton = document.getElementById("replayButton");
 
 let playerPosition = 50;
 let previousTime = performance.now();
@@ -40,6 +43,15 @@ addEventListener("keydown", (event) => {
 addEventListener("keyup", (event) => {
     keys.delete(event.key);
 });
+
+replayButton.addEventListener("click", () => {
+    window.location.reload();
+});
+
+function showEndMenu(title) {
+    endTitle.textContent = title;
+    endMenu.hidden = false;
+}
 
 /*
     Explosion
@@ -84,6 +96,7 @@ function destroyPlayer() {
     player.style.display = "none";
 
     spawnExplosion(explosionX, explosionY);
+    showEndMenu("Partie terminée");
 }
 
 /*
@@ -503,6 +516,7 @@ function spawnBoss() {
             }
 
             boss.remove();
+            showEndMenu("Victoire !");
         }
     };
 
@@ -1156,6 +1170,8 @@ function checkCollisions() {
 */
 
 function startWave() {
+    game.classList.toggle("starfall-active", wave === 1);
+
     console.log(
         `Starting wave ${wave + 1}`
     );
