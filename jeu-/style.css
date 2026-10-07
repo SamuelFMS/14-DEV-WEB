@@ -70,11 +70,15 @@ body {
 }
 
 #playerProjectiles .projectile {
-    background-color: rgb(92, 149, 255);
+    width: 1.5vh;
+    height: 4vh;
+    background: url("images/player-laser.png") center / contain no-repeat;
 }
 
 #enemyProjectiles .projectile {
-    background-color: rgb(163, 3, 123);
+    width: 1.5vh;
+    height: 4vh;
+    background: url("images/enemy-laser.png") center / contain no-repeat;
 }
 
 /* Explosions */
