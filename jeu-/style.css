@@ -17,7 +17,8 @@ body {
 /* Couches du jeu */
 
 #enemies,
-#playerProjectiles, 
+#playerProjectiles,
+#enemyProjectiles,
 #asteroids {
     position: absolute; /* Permet de positionner les ennemis par rapport au plateau de jeu */
     inset: 0; /* Remplit tout le plateau de jeu */
@@ -57,6 +58,7 @@ body {
     object-fit: contain;
     display: block;
 }
+
 /* Projectiles */
 .projectile {
     position: absolute;
@@ -70,9 +72,11 @@ body {
 #playerProjectiles .projectile {
     background-color: rgb(92, 149, 255);
 }
+
 #enemyProjectiles .projectile {
     background-color: rgb(163, 3, 123);
 }
+
 /* Explosions */
 #explosions {
     position: absolute;
