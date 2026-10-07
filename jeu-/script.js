@@ -23,6 +23,48 @@ addEventListener("keyup", e => keys.delete(e.key));
 /*
     Boss
 */
+function rotateLaser() {
+    const laser = document.querySelector(".laser");
+    const boss = document.querySelector(".boss");
+    const game = document.getElementById("game");
+
+    if (!laser || !boss || !game) return;
+
+    const gameRect = game.getBoundingClientRect();
+    const bossRect = boss.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
+
+    const bossX = bossRect.left - gameRect.left + bossRect.width / 2;
+    const bossY = bossRect.top - gameRect.top + bossRect.height / 2;
+    const playerX = playerRect.left - gameRect.left + playerRect.width / 2;
+    const playerY = playerRect.top - gameRect.top + playerRect.height / 2;
+
+    const deltaX = playerX - bossX;
+    const deltaY = playerY - bossY;
+    const distance = Math.max(Math.hypot(deltaX, deltaY), 1);
+    const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+
+    laser.style.left = `${bossX}px`;
+    laser.style.top = `${bossY}px`;
+    laser.style.width = `${distance}px`;
+    laser.style.height = "0.8vh";
+    laser.style.transformOrigin = "0 50%";
+    laser.style.transform = `rotate(${angle}deg)`;
+    laser.style.opacity = "1";
+
+    laser.directionX = deltaX / distance;
+    laser.directionY = deltaY / distance;
+}
+function spawnLaser(boss) {
+    console.log("Spawning laser");
+
+    const laser = document.createElement("div");
+    laser.classList.add("laser");
+    console.log(enemyProjectiles.children.length)
+    enemyProjectiles.appendChild(laser);
+    console.log(enemyProjectiles.children.length)
+    rotateLaser();
+}
 function spawnBoss() {
     const boss = document.createElement("div");
     boss.classList.add("boss");
@@ -35,6 +77,7 @@ function spawnBoss() {
     bossImage.alt = "Boss";
     bossImage.classList.add("bossImage");
     boss.appendChild(bossImage);
+    spawnLaser(bossImage)
     boss.hit = () => {
         console.log("boss got hit")
         boss.health -= 5;
@@ -42,6 +85,7 @@ function spawnBoss() {
             boss.remove();
         }
     }
+    boss.update = () => moveBoss();
 }
 
 /*
@@ -117,19 +161,17 @@ function movePlayer(direction, deltaTime) {
 /*
     Enemy Movement
 */
-function moveEnemies(deltaTime) {
+function moveEnemies(enemy) {
     const time = performance.now() / 1000;
 
-    for (const enemy of Array.from(enemies.children)) {
-        const horizontalOffset = Math.sin(time * enemy.driftSpeed + enemy.driftOffset) * enemy.horizontalAmplitude;
-        const verticalOffset = Math.sin(time * (enemy.driftSpeed * 1.8) + enemy.driftOffset) * enemy.verticalAmplitude;
+    const horizontalOffset = Math.sin(time * enemy.driftSpeed + enemy.driftOffset) * enemy.horizontalAmplitude;
+    const verticalOffset = Math.sin(time * (enemy.driftSpeed * 1.8) + enemy.driftOffset) * enemy.verticalAmplitude;
 
-        const nextLeft = Math.max(6, Math.min(94, enemy.baseX + horizontalOffset));
-        const nextTop = Math.max(8, Math.min(28, enemy.baseY + verticalOffset));
+    const nextLeft = Math.max(6, Math.min(94, enemy.baseX + horizontalOffset));
+    const nextTop = Math.max(8, Math.min(28, enemy.baseY + verticalOffset));
 
-        enemy.style.left = `${nextLeft}%`;
-        enemy.style.top = `${nextTop}%`;
-    }
+    enemy.style.left = `${nextLeft}%`;
+    enemy.style.top = `${nextTop}%`;
 }
 
 /*
@@ -156,6 +198,8 @@ function moveBoss(deltaTime) {
     const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
 
     getBoss.style.transform = `translate(-50%, +20%) rotate(${angle-90}deg)`
+
+    rotateLaser();
 }
 /*
     Collisions
@@ -203,7 +247,7 @@ function checkCollisionsEnemy() {
     if (!playerAlive) return;
 
     const playerRect = player.getBoundingClientRect();
-    for (const projectile of Array.from(enemyProjectiles.children)) {
+    for (const projectile of Array.from(document.querySelectorAll("#enemyProjectiles .projectile"))) {
         const projectileRect = projectile.getBoundingClientRect();
         if (projectileRect.left < playerRect.right &&
             projectileRect.right > playerRect.left &&
@@ -274,7 +318,7 @@ function spawnEnemyProjectile(enemy) {
 }
 
 function updateEnemyProjectiles(deltaTime) {
-    const projectiles = Array.from(enemyProjectiles.children);
+    const projectiles = Array.from(document.querySelectorAll("#enemyProjectiles .projectile"));
     for (const projectile of projectiles) {
         const currentTop = parseFloat(projectile.style.top);
         const newTop = currentTop + PROJECTILE_SPEED * (deltaTime / 1000);
@@ -322,6 +366,9 @@ function createEnemy(i, enemyCount) {
     enemy.hit = () => {
         enemy.remove();
     }
+    enemy.update = () => {
+        moveEnemies(enemy);
+    }
     setTimeout(() => {
         spawnEnemyProjectile(enemy);
     }, ENEMY_ShOOT_COOLDOWN);
@@ -331,7 +378,7 @@ function createEnemy(i, enemyCount) {
     Commencement des vagues d'ennemis
 */
 function startWave() {
-    wave = 2;
+    wave = 2
     if (wave >= 3) {
         console.log("Toutes les vagues terminées !");
         return;
@@ -356,6 +403,12 @@ function startWave() {
 
 }
 
+function updateAllEnenmies(deltaTime) {
+    for (const enemy of Array.from(enemies.children)) {
+        enemy.update(deltaTime)
+    }
+}
+
 /*
     Update loop
 */
@@ -372,11 +425,10 @@ async function update(currentTime) {
     if (keys.has("ArrowUp")) {
         shoot(currentTime);
     }
-    moveEnemies(deltaTime);
     updateProjectiles(deltaTime);
     updateEnemyProjectiles(deltaTime);
+    updateAllEnenmies(deltaTime)
     updateAsteroids(deltaTime);
-    moveBoss(deltaTime);
     checkCollisionsEnemy();  
     requestAnimationFrame(update);
 }
