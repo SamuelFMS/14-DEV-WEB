@@ -384,7 +384,7 @@ function spawnAsteroid() {
         document.createElement("img");
 
     asteroidImage.src =
-        "images/Asteroid.png";
+        "images/Asteroid.gif";
 
     asteroidImage.alt = "Asteroid";
 
