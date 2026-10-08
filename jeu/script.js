@@ -28,7 +28,7 @@ const PROJECTILE_SPEED = 50; // % par seconde
 */
 const BOSS_HEALTH = 300;
 const LASER_AIM_TIME = 2000; // Temps pendant lequel le boss vise
-const LASER_WARNING_TIME = 1000; // Temps de clignotement
+const LASER_WARNING_TIME = 300; // Temps de clignotement
 const LASER_FIRE_TIME = 500; // Durée du tir
 const LASER_COOLDOWN = 1000; // Pause avant le prochain laser
 const LASER_HITBOX = 10;
