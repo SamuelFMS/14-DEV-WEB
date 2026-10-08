@@ -1,0 +1,121 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#content {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: black url("images/background.png") center / cover no-repeat;
+}
+
+/* Earth */
+#earth {
+    position: absolute;
+    width: 20vw;
+    aspect-ratio: 1 / 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background: url("images/earth.png") center / contain no-repeat;
+    transition: transform 3s ease-in;
+    z-index: 2;
+}
+
+#earth.zoom {
+    transform: translate(-50%, -50%) scale(40);
+}
+
+/* Plane */
+#plane {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5vw;
+    aspect-ratio: 1 / 1;
+    background: url("images/Vaisseau.png") center / contain no-repeat;
+    animation: orbit 10s linear infinite;
+    transition: opacity 0.5s ease;
+    z-index: 3;
+}
+
+@keyframes orbit {
+    from { transform: translate(-50%, -50%) rotate(0deg) translateX(-15vw); }
+    to { transform: translate(-50%, -50%) rotate(360deg) translateX(-15vw); }
+}
+
+/* Asteroids */
+.asteroid {
+    position: absolute;
+    width: 5vw;
+    aspect-ratio: 1 / 1;
+    background: url("images/Asteroid.gif") center / contain no-repeat;
+    pointer-events: none;
+    animation: moveAsteroid 8s linear forwards;
+    opacity: 0.9;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+
+@keyframes moveAsteroid {
+    from { transform: translate(0, 0) rotate(-45deg); }
+    to { transform: translate(110vw, 110vh) rotate(-45deg); }
+}
+
+/* Play button */
+#playButton {
+    position: absolute;
+    left: 50%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    padding: 15px 60px;
+    border: 2px solid #00d9ff;
+    border-radius: 8px;
+    background: rgba(0, 20, 45, 0.8);
+    color: #00d9ff;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00d9ff66, inset 0 0 15px #00d9ff33;
+    text-shadow: 0 0 10px #00d9ff;
+    transition: opacity 0.5s ease, transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+}
+
+#playButton:hover {
+    background: #00d9ff;
+    color: #001020;
+    box-shadow: 0 0 20px #00d9ff, 0 0 50px #00d9ff;
+    text-shadow: none;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+#playButton:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+#playButton.hidden, #plane.hidden, .asteroid.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Fade to black */
+#black {
+    position: fixed;
+    inset: 0;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 1s linear;
+}
+
+#black.visible {
+    opacity: 1;
+}
