@@ -69,7 +69,7 @@ function spawnExplosion(left, top) {
 
     setTimeout(() => {
         explosion.remove();
-    }, 550);
+    }, 525);
 }
 
 /*
